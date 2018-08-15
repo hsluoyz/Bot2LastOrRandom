@@ -30,19 +30,34 @@ namespace Bot2LastOrRandom
 
             // This bot example will just return the golden number of the latest round.
             // The first value in last line is the golden number for the latest round.
-            double number1 = ConvertToDouble(history.LastOrDefault()?.FirstOrDefault());
-            double number2 = ConvertToDouble(history.LastOrDefault()?.FirstOrDefault());
 
-            Random random = new Random(System.Diagnostics.Process.GetCurrentProcess().Id);
-            if (number1 == 0d)
+            double n = 0;
+            if (history.Count == 0)
             {
-                number1 = random.NextDouble() * 100;
+                Random random = new Random(System.Diagnostics.Process.GetCurrentProcess().Id);
+                n = random.NextDouble() * 100;
+            }
+            else
+            {
+                for (int i = 0; i < history.Count; i++)
+                {
+                    n += ConvertToDouble(history[i].FirstOrDefault());
+                }
+
+                n /= history.Count;
             }
 
-            if (number2 == 0d)
-            {
-                number2 = random.NextDouble() * 100;
-            }
+            double number1 = n - 10;
+            double number2 = n + 10;
+
+            if (number1 <= 0)
+                number1 = 0.00000001;
+            if (number1 >= 100)
+                number1 = 99.9999999;
+            if (number2 <= 0)
+                number2 = 0.00000001;
+            if (number2 >= 100)
+                number2 = 99.9999999;
 
             // Write 2 numbers to stdout
             Console.Out.WriteLine($"{number1}\t{number2}");
